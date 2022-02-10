@@ -36,7 +36,7 @@ class Note
     private string $text;
 
     /**
-     * @ORM\OneToMany(targetEntity=File::class, mappedBy="note", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=File::class, mappedBy="note", cascade={"persist"}, orphanRemoval=true)
      */
     private $files;
 
