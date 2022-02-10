@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Note{% endblock %}
+
+{% block body %}
+    <h1>Note</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ note.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ note.title }}</td>
+            </tr>
+            <tr>
+                <th>Text</th>
+                <td>{{ note.text }}</td>
+            </tr>
+            <tr>
+                <th>Files</th>
+                <td>
+                    {% for file in files %}
+                    <a href="{{ asset('uploads/files/'~file.url) }}" src="{{ asset('uploads/files/'~file.url) }}">File</a>
+                    {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('note_index') }}" class="btn btn-secondary">back to list</a>
+
+    <a href="{{ path('note_edit', {'id': note.id}) }}" class="btn btn-primary">edit</a>
+
+    {{ include('note/_delete_form.html.twig') }}
+{% endblock %}

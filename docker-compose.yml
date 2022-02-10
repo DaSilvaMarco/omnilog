@@ -1,0 +1,58 @@
+version: "3"
+
+services:
+    apache:
+        build: .docker/apache
+        ports:
+            - "127.0.0.1:80:80"
+        volumes:
+            - .:/var/www/project
+        working_dir: /var/www/project
+
+    php:
+        build: .docker/php
+        user: dev
+        volumes:
+            - .:/var/www/project
+            - ~/.ssh:/home/dev/.ssh
+        working_dir: /var/www/project
+
+    db:
+        image: mysql:5.7
+        ports:
+            - "127.0.0.1:3306:3306"
+        volumes:
+            - ./var/db:/var/lib/mysql
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_DATABASE: website
+            MYSQL_ROOT_PASSWORD: E87VswRRF3tRbeREtY7GLRx9k2n488Kp
+
+    node:
+        image: node:14-alpine
+        user: "node"
+        volumes:
+            - .:/var/www/project
+        working_dir: /var/www/project
+        ports:
+            - "8080:8080"
+        # Others commands :
+        # yarn install // Install assets
+        # yarn encore dev --watch // Watch and compile assets
+        # yarn encore dev-server --host 0.0.0.0 --port 8080 --disable-host-check // Watch and compile assets + Hot reload
+        command: "ash -c \"yarn install && yarn encore dev --watch\""
+
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        restart: always
+        ports:
+            - "81:80"
+        depends_on:
+            - "db"
+        environment:
+            - PMA_HOST=db
+
+
+volumes:
+    database:
